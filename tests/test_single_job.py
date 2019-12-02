@@ -131,7 +131,7 @@ class SingleJobMockLab(MockLab):
         api.add_transition(
             PUT(
                 '/projects/1234/merge_requests/{iid}/merge'.format(iid=self.merge_request_info['iid']),
-                dict(sha=rewritten_sha, should_remove_source_branch=True, merge_when_pipeline_succeeds=True),
+                dict(sha=rewritten_sha, should_remove_source_branch=True),
             ),
             Ok({}),
             from_state=['passed', 'skipped'], to_state='merged',
@@ -520,7 +520,6 @@ class TestUpdateAndAccept:  # pylint: disable=too-many-public-methods
                 dict(
                     sha=first_rewritten_sha,
                     should_remove_source_branch=True,
-                    merge_when_pipeline_succeeds=True,
                 ),
             ),
             Error(marge.gitlab.NotAcceptable()),
@@ -572,7 +571,7 @@ class TestUpdateAndAccept:  # pylint: disable=too-many-public-methods
         api.add_transition(
             PUT(
                 '/projects/1234/merge_requests/{iid}/merge'.format(iid=mocklab.merge_request_info['iid']),
-                dict(sha=rewritten_sha, should_remove_source_branch=True, merge_when_pipeline_succeeds=True),
+                dict(sha=rewritten_sha, should_remove_source_branch=True),
             ),
             Error(marge.gitlab.NotFound(404, {'message': '404 Branch Not Found'})),
             from_state='passed', to_state='someone_else_merged',
@@ -591,7 +590,7 @@ class TestUpdateAndAccept:  # pylint: disable=too-many-public-methods
         api.add_transition(
             PUT(
                 '/projects/1234/merge_requests/{iid}/merge'.format(iid=mocklab.merge_request_info['iid']),
-                dict(sha=rewritten_sha, should_remove_source_branch=True, merge_when_pipeline_succeeds=True),
+                dict(sha=rewritten_sha, should_remove_source_branch=True),
             ),
             Error(marge.gitlab.MethodNotAllowed(405, {'message': '405 Method Not Allowed'})),
             from_state='passed', to_state='now_is_wip',
@@ -612,7 +611,7 @@ class TestUpdateAndAccept:  # pylint: disable=too-many-public-methods
         api.add_transition(
             PUT(
                 '/projects/1234/merge_requests/{iid}/merge'.format(iid=mocklab.merge_request_info['iid']),
-                dict(sha=rewritten_sha, should_remove_source_branch=True, merge_when_pipeline_succeeds=True),
+                dict(sha=rewritten_sha, should_remove_source_branch=True),
             ),
             Error(marge.gitlab.MethodNotAllowed(405, {'message': '405 Method Not Allowed'})),
             from_state='passed', to_state='rejected_by_git_hook',
@@ -636,7 +635,7 @@ class TestUpdateAndAccept:  # pylint: disable=too-many-public-methods
         api.add_transition(
             PUT(
                 '/projects/1234/merge_requests/{iid}/merge'.format(iid=mocklab.merge_request_info['iid']),
-                dict(sha=rewritten_sha, should_remove_source_branch=True, merge_when_pipeline_succeeds=True),
+                dict(sha=rewritten_sha, should_remove_source_branch=True),
             ),
             Error(marge.gitlab.MethodNotAllowed(405, {'message': '405 Method Not Allowed'})),
             from_state='passed', to_state='unresolved_discussions',
@@ -661,7 +660,7 @@ class TestUpdateAndAccept:  # pylint: disable=too-many-public-methods
         api.add_transition(
             PUT(
                 '/projects/1234/merge_requests/{iid}/merge'.format(iid=mocklab.merge_request_info['iid']),
-                dict(sha=rewritten_sha, should_remove_source_branch=True, merge_when_pipeline_succeeds=True),
+                dict(sha=rewritten_sha, should_remove_source_branch=True),
             ),
             Error(marge.gitlab.MethodNotAllowed(405, {'message': '405 Method Not Allowed'})),
             from_state='passed', to_state='oops_someone_closed_it',
@@ -682,7 +681,7 @@ class TestUpdateAndAccept:  # pylint: disable=too-many-public-methods
         api.add_transition(
             PUT(
                 '/projects/1234/merge_requests/{iid}/merge'.format(iid=mocklab.merge_request_info['iid']),
-                dict(sha=rewritten_sha, should_remove_source_branch=True, merge_when_pipeline_succeeds=True),
+                dict(sha=rewritten_sha, should_remove_source_branch=True),
             ),
             Error(marge.gitlab.MethodNotAllowed(405, {'message': '405 Method Not Allowed'})),
             from_state='passed', to_state='rejected_for_mysterious_reasons',
