@@ -74,6 +74,13 @@ class SingleMergeJob(MergeJob):
             self.maybe_reapprove(merge_request, approvals)
 
             if target_project.only_allow_merge_if_pipeline_succeeds:
+
+                # Restart if CI was initially in failed state
+                pipeline = self.get_mr_ci(merge_request, actual_sha)
+                if pipeline.status == 'failed':
+                    pipeline.restart()
+                    time.sleep(5)
+
                 self.wait_for_ci_to_pass(merge_request, actual_sha)
                 time.sleep(2)
 

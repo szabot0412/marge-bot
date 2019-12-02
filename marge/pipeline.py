@@ -66,3 +66,8 @@ class Pipeline(gitlab.Resource):
         return self._api.call(POST(
             '/projects/{0.project_id}/pipelines/{0.id}/cancel'.format(self),
         ))
+
+    def restart(self):
+        return self._api.call(POST(
+            '/projects/{0.project_id}/pipelines/{0.id}/retry'.format(self),
+        ))

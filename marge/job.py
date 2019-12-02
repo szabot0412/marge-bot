@@ -133,6 +133,18 @@ class MergeJob:
         return sha
 
     def get_mr_ci_status(self, merge_request, commit_sha=None):
+
+        current_pipeline = self.get_mr_ci(merge_request, commit_sha)
+
+        if current_pipeline:
+            ci_status = current_pipeline.status
+        else:
+            log.warning('No pipeline listed for %s on branch %s', commit_sha, merge_request.source_branch)
+            ci_status = None
+
+        return ci_status
+
+    def get_mr_ci(self, merge_request, commit_sha=None):
         if commit_sha is None:
             commit_sha = merge_request.sha
 
@@ -151,7 +163,7 @@ class MergeJob:
         current_pipeline = next(iter(pipeline for pipeline in pipelines if pipeline.sha == commit_sha), None)
 
         if current_pipeline:
-            ci_status = current_pipeline.status
+            ci_status = current_pipeline
         else:
             log.warning('No pipeline listed for %s on branch %s', commit_sha, merge_request.source_branch)
             ci_status = None
